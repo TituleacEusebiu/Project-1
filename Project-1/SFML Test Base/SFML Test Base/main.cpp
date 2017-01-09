@@ -11,7 +11,8 @@ void ResizeView(const sf::RenderWindow& window, sf::View& view)
 }
 
 int main()
-{
+{	
+	//int Random = sf::Randomizer::Random(0, 100);
 	char s = 'X';
 	sf::RenderWindow window(sf::VideoMode(900, 600), "Snake", sf::Style::Close | sf::Style::Resize); // sf::Style::Fullscreen);
 	sf::RectangleShape player(sf::Vector2f(50.0f, 50.0f));
@@ -20,12 +21,16 @@ int main()
 	//sf::Texture playerTexture;
 	//playerTexture.loadFromFile("romania.jpg");
 	//player.setTexture(&playerTexture);
-	
+	window.setFramerateLimit(60);
 	//sf::Vector2u textureSize = playerTexture.getSize();
 	//textureSize.x /= 3;
 	//textureSize.y /= 9;
 	//player.setTextureRect(sf::IntRect(textureSize.x * 2, textureSize.y * 8, textureSize.x, textureSize.y));
 
+	sf::RectangleShape food(sf::Vector2f(50.0f, 50.0f));
+	food.setPosition(206.0f, 206.0f);
+	food.setFillColor(sf::Color::Red);
+	food.setPosition(rand()%900, rand() % 600);
 	while (window.isOpen())
 	{
 		sf::Event evnt;
@@ -40,13 +45,13 @@ int main()
 
 		}
 		if (s == 'A')
-			player.move(-0.5f, 0.0f);
+			player.move(-1.0f, 0.0f);
 		if (s == 'D')
-			player.move(0.5f, 0.0f);
+			player.move(1.0f, 0.0f);
 		if (s == 'W')
-			player.move(0.0f, -0.5f);
+			player.move(0.0f, -1.0f);
 		if (s == 'S')
-			player.move(0.0f, 0.5f);
+			player.move(0.0f, 1.0f);
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
 		{	
@@ -74,7 +79,9 @@ int main()
 
 		window.clear();
 		window.draw(player);
+		window.draw(food);
 		window.display();
+		window.clear();
 	}
 	return 0;
 }
