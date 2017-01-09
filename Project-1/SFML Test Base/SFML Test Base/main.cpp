@@ -12,15 +12,15 @@ void ResizeView(const sf::RenderWindow& window, sf::View& view)
 
 int main()
 {
-
+	char s = 'X';
 	sf::RenderWindow window(sf::VideoMode(900, 600), "Snake", sf::Style::Close | sf::Style::Resize); // sf::Style::Fullscreen);
-	sf::RectangleShape player(sf::Vector2f(150.0f, 100.0f));
-
+	sf::RectangleShape player(sf::Vector2f(50.0f, 50.0f));
 	player.setPosition(206.0f, 206.0f);
-	sf::Texture playerTexture;
-	playerTexture.loadFromFile("romania.jpg");
-	player.setTexture(&playerTexture);
-
+	player.setFillColor(sf::Color::Blue);
+	//sf::Texture playerTexture;
+	//playerTexture.loadFromFile("romania.jpg");
+	//player.setTexture(&playerTexture);
+	
 	//sf::Vector2u textureSize = playerTexture.getSize();
 	//textureSize.x /= 3;
 	//textureSize.y /= 9;
@@ -39,23 +39,35 @@ int main()
 			}
 
 		}
-		
+		if (s == 'A')
+			player.move(-0.5f, 0.0f);
+		if (s == 'D')
+			player.move(0.5f, 0.0f);
+		if (s == 'W')
+			player.move(0.0f, -0.5f);
+		if (s == 'S')
+			player.move(0.0f, 0.5f);
+
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
 		{	
-			player.move(-0.1f, 0.0f);
+			player.move(-0.5f, 0.0f);
+			s = 'A';
 		
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
 		{
-			player.move(0.1f, 0.0f);
+			player.move(0.5f, 0.0f);
+			s = 'D';
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
 		{
-			player.move(0.0f, -0.1f);
+			player.move(0.0f, -0.5f);
+			s = 'W';
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
 		{
-			player.move(0.0f, 0.1f);
+			player.move(0.0f, 0.5f);
+			s = 'S';
 		}
 
 
