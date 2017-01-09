@@ -3,7 +3,7 @@
 
 static const float VIEW_HEIGHT = 512.0f;
 // void
-
+//aaaaa
 void ResizeView(const sf::RenderWindow& window, sf::View& view)
 {
 	float aspectRatio = float(window.getSize().x / float(window.getSize().y));
