@@ -1,39 +1,44 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-static const float VIEW_HEIGHT = 512.0f;
-// void
-//aaaaa
-void ResizeView(const sf::RenderWindow& window, sf::View& view)
-{
-	float aspectRatio = float(window.getSize().x / float(window.getSize().y));
-	view.setSize(VIEW_HEIGHT * aspectRatio, VIEW_HEIGHT);
-}
-
 int main()
 {	
-	//int Random = sf::Randomizer::Random(0, 100);
+	float ax, ay, bx, by;
+	ax = std::rand() * 40 % 640;
+	ay = std::rand() * 40 % 640;
+	bx = std::rand() * 40 % 640;
+	by = std::rand() * 40 % 640;
 	char s = 'X';
-	sf::RenderWindow window(sf::VideoMode(900, 600), "Snake", sf::Style::Close | sf::Style::Resize); // sf::Style::Fullscreen);
-	sf::RectangleShape player(sf::Vector2f(50.0f, 50.0f));
-	player.setPosition(206.0f, 206.0f);
-	player.setFillColor(sf::Color::Blue);
-	//sf::Texture playerTexture;
-	//playerTexture.loadFromFile("romania.jpg");
-	//player.setTexture(&playerTexture);
-	window.setFramerateLimit(60);
-	//sf::Vector2u textureSize = playerTexture.getSize();
-	//textureSize.x /= 3;
-	//textureSize.y /= 9;
-	//player.setTextureRect(sf::IntRect(textureSize.x * 2, textureSize.y * 8, textureSize.x, textureSize.y));
 
-	sf::RectangleShape food(sf::Vector2f(50.0f, 50.0f));
-	food.setPosition(206.0f, 206.0f);
-	food.setFillColor(sf::Color::Red);
-	food.setPosition(rand()%900, rand() % 600);
+	sf::Time time = sf::seconds(2);
+
+	sf::RenderWindow window(sf::VideoMode(640, 640), "Snake", sf::Style::Close | sf::Style::Resize); // sf::Style::Fullscreen);
+	sf::RectangleShape ecran(sf::Vector2f(640.0f, 640.0f));
+
+	sf::RectangleShape player(sf::Vector2f(40, 40)); // player
+	player.setPosition(ax, ay);
+
+	sf::RectangleShape food(sf::Vector2f(40, 40)); // food
+	food.setPosition(bx, by);
+
+	sf::Texture playerTexture;							// textura player
+	playerTexture.loadFromFile("player1.png");
+	player.setTexture(&playerTexture);
+
+	sf::Texture foodTexture;							//textura hrana
+	foodTexture.loadFromFile("food.png");
+	food.setTexture(&foodTexture);
+
+	sf::Texture ecranTexture;							//textura fereastra
+	ecranTexture.loadFromFile("4h.png");
+	ecran.setTexture(&ecranTexture);
+
+	window.setFramerateLimit(10);
+
 	while (window.isOpen())
 	{
 		sf::Event evnt;
+
 		while (window.pollEvent(evnt))
 		{
 			switch (evnt.type)
@@ -44,40 +49,73 @@ int main()
 			}
 
 		}
-		if (s == 'A')
-			player.move(-1.0f, 0.0f);
-		if (s == 'D')
-			player.move(1.0f, 0.0f);
-		if (s == 'W')
-			player.move(0.0f, -1.0f);
-		if (s == 'S')
-			player.move(0.0f, 1.0f);
 
+		if (player.getPosition().x > 600)
+			player.setPosition(0.0, player.getPosition().y);
+
+		if (player.getPosition().x < 0)
+			player.setPosition(600, player.getPosition().y);
+
+		if (player.getPosition().y > 600)
+			player.setPosition(player.getPosition().x, 0);	
+
+		if (player.getPosition().y < 0)
+			player.setPosition(player.getPosition().x, 600);
+
+		
+		
+		if (player.getPosition().x == food.getPosition().x && player.getPosition().y == food.getPosition().y ||
+			player.getPosition().x == food.getPosition().x+20 && player.getPosition().y == food.getPosition().y+20 ||
+			player.getPosition().x == food.getPosition().x-20 && player.getPosition().y == food.getPosition().y-20 ||
+			player.getPosition().x == food.getPosition().x-20 && player.getPosition().y == food.getPosition().y+20 ||
+			player.getPosition().x == food.getPosition().x+20 && player.getPosition().y == food.getPosition().y-20)
+		{
+			food.setFillColor(sf::Color(rand() % 255, rand() % 255, rand() % 255));
+			bx = std::rand() * 40 % 640;
+			by = std::rand() * 40 % 640;
+			food.setPosition(bx, by);
+		}
+
+		if (s == 'A' )
+			player.move(-20.0f, 0.0f);
+		if (s == 'D')
+			player.move(20.0f, 0.0f);
+		if (s == 'W')
+			player.move(0.0f, -20.0f);
+		if (s == 'S')
+			player.move(0.0f, 20.0f);
+
+		if (s != 'D' && s != 'A')
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
 		{	
-			player.move(-0.5f, 0.0f);
+			player.move(-20.0f, 0.0f);
 			s = 'A';
 		
 		}
+		if (s != 'D' && s != 'A')
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
 		{
-			player.move(0.5f, 0.0f);
+			player.move(20.0f, 0.0f);
 			s = 'D';
 		}
+		if (s != 'W' && s != 'S')
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
 		{
-			player.move(0.0f, -0.5f);
+			player.move(0.0f, -20.0f);
 			s = 'W';
 		}
+		if (s != 'S' && s != 'W')
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
 		{
-			player.move(0.0f, 0.5f);
+			player.move(0.0f, 20.0f);
 			s = 'S';
 		}
 
-
+		
 
 		window.clear();
+		window.draw(player);
+		window.draw(ecran);
 		window.draw(player);
 		window.draw(food);
 		window.display();
