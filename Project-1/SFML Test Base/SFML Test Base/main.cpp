@@ -1,19 +1,25 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <ctime>
+#include <cstdlib>
 
 int main()
 {	
+
+	int i = 1, j = 0, c = 1, k = 1;
 	float ax, ay, bx, by;
-	ax = std::rand() * 40 % 640;
-	ay = std::rand() * 40 % 640;
-	bx = std::rand() * 40 % 640;
-	by = std::rand() * 40 % 640;
+	ax = rand() * 40 % 640;
+	ay = rand() * 40 % 640;
+	bx = rand() * 40 % 640;
+	by = rand() * 40 % 640;
+
 	char s = 'X';
 
-	sf::Time time = sf::seconds(2);
+	sf::RectangleShape snake[256];
 
-	sf::RenderWindow window(sf::VideoMode(640, 640), "Snake", sf::Style::Close | sf::Style::Resize); // sf::Style::Fullscreen);
+	sf::RenderWindow window(sf::VideoMode(640, 640), "Snake", sf::Style::Close);
 	sf::RectangleShape ecran(sf::Vector2f(640.0f, 640.0f));
+
 
 	sf::RectangleShape player(sf::Vector2f(40, 40)); // player
 	player.setPosition(ax, ay);
@@ -24,6 +30,7 @@ int main()
 	sf::Texture playerTexture;							// textura player
 	playerTexture.loadFromFile("player1.png");
 	player.setTexture(&playerTexture);
+	snake[0] = player;
 
 	sf::Texture foodTexture;							//textura hrana
 	foodTexture.loadFromFile("food.png");
@@ -33,7 +40,9 @@ int main()
 	ecranTexture.loadFromFile("4h.png");
 	ecran.setTexture(&ecranTexture);
 
-	window.setFramerateLimit(10);
+	window.setFramerateLimit(7);
+
+	
 
 	while (window.isOpen())
 	{
@@ -50,76 +59,151 @@ int main()
 
 		}
 
-		if (player.getPosition().x > 600)
-			player.setPosition(0.0, player.getPosition().y);
+		if (snake[0].getPosition().x > 600)								//daca iese inafara ecranului se teleporteaza la capatul opus
+			snake[0].setPosition(0.0, snake[0].getPosition().y);
 
-		if (player.getPosition().x < 0)
-			player.setPosition(600, player.getPosition().y);
+		if (snake[0].getPosition().x < 0)
+			snake[0].setPosition(600, snake[0].getPosition().y);
 
-		if (player.getPosition().y > 600)
-			player.setPosition(player.getPosition().x, 0);	
+		if (snake[0].getPosition().y > 600)
+			snake[0].setPosition(snake[0].getPosition().x, 0);
 
-		if (player.getPosition().y < 0)
-			player.setPosition(player.getPosition().x, 600);
+		if (snake[0].getPosition().y < 0)
+			snake[0].setPosition(snake[0].getPosition().x, 600);
 
-		
-		
-		if (player.getPosition().x == food.getPosition().x && player.getPosition().y == food.getPosition().y ||
-			player.getPosition().x == food.getPosition().x+20 && player.getPosition().y == food.getPosition().y+20 ||
-			player.getPosition().x == food.getPosition().x-20 && player.getPosition().y == food.getPosition().y-20 ||
-			player.getPosition().x == food.getPosition().x-20 && player.getPosition().y == food.getPosition().y+20 ||
-			player.getPosition().x == food.getPosition().x+20 && player.getPosition().y == food.getPosition().y-20)
+
+
+		if (snake[0].getPosition().x == food.getPosition().x && snake[0].getPosition().y == food.getPosition().y) // daca are loc coleziunea dintre hrana si sarpe
 		{
-			food.setFillColor(sf::Color(rand() % 255, rand() % 255, rand() % 255));
-			bx = std::rand() * 40 % 640;
-			by = std::rand() * 40 % 640;
+			snake[k] = food;
+			k = k + 1;
+			snake[k].setPosition(snake[k - 1].getPosition().x, snake[k - 1].getPosition().y);
+
+			food.setFillColor(sf::Color(rand() % 255, rand() % 255, rand() % 255));  // setez o culoare aleatorie hranei
+			bx = rand() * 40 % 640;
+			by = rand() * 40 % 640;
 			food.setPosition(bx, by);
 		}
 
-		if (s == 'A' )
-			player.move(-20.0f, 0.0f);
+
+		if (s == 'A')
+		{
+
+			for (i = k; i > 0; i--)
+				snake[i].setPosition(snake[i - 1].getPosition().x, snake[i - 1].getPosition().y);
+			snake[0].move(-40.0f, 0.0f);
+		}
 		if (s == 'D')
-			player.move(20.0f, 0.0f);
+		{
+
+			for (i = k; i > 0; i--)
+				snake[i].setPosition(snake[i - 1].getPosition().x, snake[i - 1].getPosition().y);
+			snake[0].move(40.0f, 0.0f);
+		}
 		if (s == 'W')
-			player.move(0.0f, -20.0f);
+		{
+
+			for (i = k; i > 0; i--)
+				snake[i].setPosition(snake[i - 1].getPosition().x, snake[i - 1].getPosition().y);
+			snake[0].move(0.0f, -40.0f);
+		}
 		if (s == 'S')
-			player.move(0.0f, 20.0f);
+		{
+
+			for (i = k; i > 0; i--)
+				snake[i].setPosition(snake[i - 1].getPosition().x, snake[i - 1].getPosition().y);
+			snake[0].move(0.0f, 40.0f);
+
+		}
+
+
+
 
 		if (s != 'D' && s != 'A')
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
-		{	
-			player.move(-20.0f, 0.0f);
-			s = 'A';
-		
-		}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
+			{
+				for (i = k; i > 0; i--)
+					snake[i].setPosition(snake[i - 1].getPosition().x, snake[i - 1].getPosition().y);
+				snake[0].move(-40.0f, 0.0f);
+				s = 'A';
+
+			}
 		if (s != 'D' && s != 'A')
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-		{
-			player.move(20.0f, 0.0f);
-			s = 'D';
-		}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
+			{
+				for (i = k; i > 0; i--)
+					snake[i].setPosition(snake[i - 1].getPosition().x, snake[i - 1].getPosition().y);
+				snake[0].move(40.0f, 0.0f);
+				s = 'D';
+			}
 		if (s != 'W' && s != 'S')
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
-		{
-			player.move(0.0f, -20.0f);
-			s = 'W';
-		}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
+			{
+				for (i = k; i > 0; i--)
+					snake[i].setPosition(snake[i - 1].getPosition().x, snake[i - 1].getPosition().y);
+				snake[0].move(0.0f, -40.0f);
+				s = 'W';
+			}
 		if (s != 'S' && s != 'W')
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
-		{
-			player.move(0.0f, 20.0f);
-			s = 'S';
-		}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
+			{
+				for (i = k; i > 0; i--)
+					snake[i].setPosition(snake[i - 1].getPosition().x, snake[i - 1].getPosition().y);
+				snake[0].move(0.0f, 40.0f);
+				s = 'S';
+			}
 
-		
+		for (c = 1; c < k; c++)
+			if (snake[0].getPosition().x == snake[c].getPosition().x && snake[0].getPosition().y == snake[c].getPosition().y)
+			{
+				sf::RenderWindow pierdut(sf::VideoMode(160, 150), "Ai piedut", sf::Style::Close | sf::Style::Resize);
+				sf::RectangleShape lose(sf::Vector2f(160.0f, 150.0f));
+				sf::Texture loseTexture;
+				loseTexture.loadFromFile("5h.png");
+				lose.setTexture(&loseTexture);
 
+				while (pierdut.isOpen())
+				{
+					sf::Event evntt;
+
+					while (pierdut.pollEvent(evntt))
+					{
+						switch (evntt.type)
+						{
+						case sf::Event::Closed:
+							pierdut.close();
+							window.close();
+							break;
+						}
+					}
+
+					if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+					{
+						sf::Vector2i mousePos = sf::Mouse::getPosition(pierdut);
+						if (mousePos.x > 100 && mousePos.y < 160)
+						{
+							pierdut.close();
+							window.close();
+						}
+					}
+					pierdut.clear();
+					pierdut.draw(lose);
+					pierdut.display();
+				}
+			}
+
+		sf::Texture fsnakeTexture;							// textura player
+		fsnakeTexture.loadFromFile("player1.png");
+
+		for (j = 0; j < k; j++)			// colorez sarpele albastru;
+			snake[j].setTexture(&fsnakeTexture);
+		//std::cout << k << std::endl;
 		window.clear();
-		window.draw(player);
 		window.draw(ecran);
-		window.draw(player);
 		window.draw(food);
+		for (j = 0; j < k; j++)
+		window.draw(snake[j]);
 		window.display();
-		window.clear();
 	}
 	return 0;
 }
