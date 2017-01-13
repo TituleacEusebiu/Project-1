@@ -4,7 +4,89 @@
 #include <cstdlib>
 
 int main()
-{	
+{
+	sf::RenderWindow meniu(sf::VideoMode(450, 450), "Menu", sf::Style::Close);
+	sf::RectangleShape menu(sf::Vector2f(450.0f, 450.0f));
+	sf::Texture meniuTexture;
+	meniuTexture.loadFromFile("menu.png");
+	menu.setTexture(&meniuTexture);
+
+
+
+	while (meniu.isOpen())
+	{
+		sf::Event evnttt;
+
+		while (meniu.pollEvent(evnttt))
+		{
+			switch (evnttt.type)
+			{
+			case sf::Event::Closed:
+			{
+				meniu.close();
+				return EXIT_SUCCESS;
+				break;
+			}
+			}
+		}
+
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			sf::Vector2i mousePos = sf::Mouse::getPosition(meniu);
+			if (mousePos.x > 0 && mousePos.x < 450 && mousePos.y > 375 && mousePos.y < 450)
+			{
+				meniu.close();
+				return EXIT_SUCCESS;
+			}
+		}
+
+		if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			sf::Vector2i mousePos = sf::Mouse::getPosition(meniu);
+			if (mousePos.x > 0 && mousePos.x < 450 && mousePos.y > 195 && mousePos.y < 295)
+			{
+				meniu.close();
+			}
+		}
+
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+				sf::Vector2i mousePos = sf::Mouse::getPosition(meniu);
+				if (mousePos.x > 0 && mousePos.x < 450 && mousePos.y > 295 && mousePos.y < 375)
+				{
+					sf::RenderWindow instructiuni(sf::VideoMode(528, 373), "Menu", sf::Style::Close);
+					sf::RectangleShape instruct(sf::Vector2f(528.0f, 373.0f));
+					sf::Texture instructTexture;
+					instructTexture.loadFromFile("instructiuni.png");
+					instruct.setTexture(&instructTexture);
+
+					while (instructiuni.isOpen())
+					{
+						sf::Event evt;
+
+						while (instructiuni.pollEvent(evt))
+						{
+							switch (evt.type)
+							{
+							case sf::Event::Closed:
+							{
+								instructiuni.close();
+								break;
+							}
+							}
+						}
+						instructiuni.clear();
+						instructiuni.draw(instruct);
+						instructiuni.display();
+					}
+			}
+
+		}
+		meniu.clear();
+		meniu.draw(menu);
+		meniu.display();
+	}
+
 
 	int i = 1, j = 0, c = 1, k = 1;
 	float ax, ay, bx, by;
@@ -75,6 +157,7 @@ int main()
 
 		if (snake[0].getPosition().x == food.getPosition().x && snake[0].getPosition().y == food.getPosition().y) // daca are loc coleziunea dintre hrana si sarpe
 		{
+			food.setFillColor(sf::Color::Blue);
 			snake[k] = food;
 			k = k + 1;
 			snake[k].setPosition(snake[k - 1].getPosition().x, snake[k - 1].getPosition().y);
@@ -82,7 +165,14 @@ int main()
 			food.setFillColor(sf::Color(rand() % 255, rand() % 255, rand() % 255));  // setez o culoare aleatorie hranei
 			bx = rand() * 40 % 640;
 			by = rand() * 40 % 640;
+			for (j = 0; j < k; j++)
+				while (snake[j].getPosition().x == bx && snake[j].getPosition().y == by)
+				{
+					bx = rand() * 40 % 640;
+					by = rand() * 40 % 640;
+				}
 			food.setPosition(bx, by);
+				
 		}
 
 
@@ -171,9 +261,10 @@ int main()
 						switch (evntt.type)
 						{
 						case sf::Event::Closed:
+						{
 							pierdut.close();
 							window.close();
-							break;
+						}
 						}
 					}
 
@@ -192,6 +283,7 @@ int main()
 				}
 			}
 
+
 		sf::Texture fsnakeTexture;							// textura player
 		fsnakeTexture.loadFromFile("player1.png");
 
@@ -205,5 +297,6 @@ int main()
 		window.draw(snake[j]);
 		window.display();
 	}
+
 	return 0;
 }
