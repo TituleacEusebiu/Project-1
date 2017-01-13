@@ -132,12 +132,12 @@ int main()
 
 							std::string hello;
 							hello = c;
+							sf::Font font;
+							sf::Text text("Hello", font ,50);
 
-							sf::Text text;
-							text.setCharacterSize(20);
 							text.setPosition(280, 45);
 							text.setFillColor(sf::Color::Blue);
-							
+
 							score.clear();
 							score.draw(scoree);
 							score.draw(text);
@@ -336,7 +336,6 @@ alala:
 						score.close();
 						if (g < k * 10)
 							g = k * 10;
-							std::cout << g << "   " << k * 10 << std:: endl;
 
 						std::ofstream("score.txt");
 						score.open("score.txt", std::ios::out);
