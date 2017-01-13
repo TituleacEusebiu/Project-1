@@ -88,7 +88,7 @@ int main()
 	}
 
 
-	int i = 1, j = 0, c = 1, k = 1;
+	
 	float ax, ay, bx, by;
 	ax = rand() * 40 % 640;
 	ay = rand() * 40 % 640;
@@ -97,7 +97,6 @@ int main()
 
 	char s = 'X';
 
-	sf::RectangleShape snake[256];
 
 	sf::RenderWindow window(sf::VideoMode(640, 640), "Snake", sf::Style::Close);
 	sf::RectangleShape ecran(sf::Vector2f(640.0f, 640.0f));
@@ -112,7 +111,7 @@ int main()
 	sf::Texture playerTexture;							// textura player
 	playerTexture.loadFromFile("player1.png");
 	player.setTexture(&playerTexture);
-	snake[0] = player;
+	
 
 	sf::Texture foodTexture;							//textura hrana
 	foodTexture.loadFromFile("food.png");
@@ -122,10 +121,15 @@ int main()
 	ecranTexture.loadFromFile("4h.png");
 	ecran.setTexture(&ecranTexture);
 
-	window.setFramerateLimit(7);
+	window.setFramerateLimit(8);
 
-	
-
+	sf::RectangleShape az;
+alala:
+	int i = 1, j = 0, c = 1, k = 1;
+	sf::RectangleShape snake[256];
+	for (c = 0; c < 255; c++)
+		snake[c] = az;
+	snake[0] = player;
 	while (window.isOpen())
 	{
 		sf::Event evnt;
@@ -254,18 +258,28 @@ int main()
 
 				while (pierdut.isOpen())
 				{
+					/*if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+					{
+						sf::Vector2i mousePos = sf::Mouse::getPosition(pierdut);
+						if (mousePos.x > 100 && mousePos.y < 160)
+						{
+							pierdut.close();
+							goto alala;
+						}
+					}*/
+
 					sf::Event evntt;
 
 					while (pierdut.pollEvent(evntt))
 					{
 						switch (evntt.type)
-						{
-						case sf::Event::Closed:
-						{
-							pierdut.close();
-							window.close();
-						}
-						}
+							{
+							case sf::Event::Closed:
+								{
+									pierdut.close();
+									window.close();
+								}
+							}
 					}
 
 					if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -274,15 +288,15 @@ int main()
 						if (mousePos.x > 100 && mousePos.y < 160)
 						{
 							pierdut.close();
-							window.close();
+							goto alala;
 						}
 					}
+					
 					pierdut.clear();
 					pierdut.draw(lose);
 					pierdut.display();
 				}
 			}
-
 
 		sf::Texture fsnakeTexture;							// textura player
 		fsnakeTexture.loadFromFile("player1.png");
@@ -297,6 +311,5 @@ int main()
 		window.draw(snake[j]);
 		window.display();
 	}
-
 	return 0;
 }
